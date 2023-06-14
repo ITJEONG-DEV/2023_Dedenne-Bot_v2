@@ -191,3 +191,6 @@ fabric.properties
 # private key
 private
 
+# result
+result
+

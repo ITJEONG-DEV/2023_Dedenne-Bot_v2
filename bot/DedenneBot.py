@@ -1,7 +1,10 @@
+import datetime
 import discord
 
 from .functions import *
 from util import parse_json
+
+KOREA = datetime.timezone(datetime.timedelta(hours=9))
 
 
 class DedenneBot(discord.Client):
@@ -74,10 +77,10 @@ class DedenneBot(discord.Client):
                 await show_doguard(message, self.lostark["apikeyauth"], self.icon)
 
             elif command == "news":
-                pass
+                await show_news(message, self.lostark["apikeyauth"], self.icon)
 
             elif command == "gif":
-                pass
+                await make_gif(message)
 
     def get_return_words(self, message):
         for item in self.words:
