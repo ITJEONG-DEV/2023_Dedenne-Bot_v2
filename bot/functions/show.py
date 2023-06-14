@@ -26,6 +26,7 @@ async def show_dobyss(message, auth, icon_url):
     else:
         await send_message(message.channel, message="정보를 조회할 수 없습니다.")
 
+
 async def show_doguard(message, auth, icon_url):
     response = get_doguard_info(auth)
 
@@ -47,6 +48,7 @@ async def show_doguard(message, auth, icon_url):
         await send_message(message.channel, embeds=embeds)
     else:
         await send_message(message.channel, message="정보를 조회할 수 없습니다.")
+
 
 async def show_news(message, auth, icon_url):
     data = get_news(auth)
@@ -77,3 +79,23 @@ async def show_news(message, auth, icon_url):
 
         if len(embeds) > 0:
             await send_message(message.channel, embeds=embeds)
+
+
+async def show_adventure_island(message, auth, icon_url):
+    link = get_adventure_island(auth)
+
+    if link == "":
+        embed = discord.Embed(
+            title="모험섬",
+            url="https://lostark.game.onstove.com/Library/Tip/Views/138208?page=1&libraryStatusType=0&librarySearchCategory=0&searchtype=0&searchtext=&ordertype=latest&LibraryQaAnswerType=None&UserPageType=0",
+            color=discord.Color.blue()
+        )
+
+        embed.set_footer(text="2021. 7. 10 기준", icon_url=icon_url)
+        embed.add_field(name="평일", value="11:00 / 13:00 / 19:00 / 21:00 / 23:00")
+        embed.add_field(name="주말", value="(오전) 09:00 / 11:00 / 13:00\n(오후) 19:00 / 21:00 / 23:00")
+
+        await send_message(message.channel, embed=embed)
+
+    else:
+        await send_message(message.channel, file=discord.File(link))

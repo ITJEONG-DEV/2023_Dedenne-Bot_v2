@@ -71,7 +71,7 @@ class DedenneBot(discord.Client):
                 await send_occup_message(message, self.icon)
 
             elif command == "island":
-                await send_message(channel=message.channel, message="준비 중인 기능")
+                await show_adventure_island(message, self.lostark["apikeyauth"], self.icon)
 
             elif command == "dobyss":
                 await show_dobyss(message, self.lostark["apikeyauth"], self.icon)

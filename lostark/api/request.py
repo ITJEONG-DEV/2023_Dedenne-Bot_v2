@@ -134,3 +134,17 @@ def get_engrave_rank(auth):
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
     return response.json()
+
+
+def get_island_info(auth):
+    request_url = main_url + "/gamecontents/calendar"
+
+    response = requests.get(request_url, headers=get_GET_headers(auth), verify=False)
+
+    island = []
+
+    for item in response.json():
+        if item["CategoryName"] == "모험 섬":
+            island.append(item)
+
+    return island
