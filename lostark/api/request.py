@@ -70,7 +70,10 @@ def get_gems(name, auth):
 
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
-    return response.json()
+    try:
+        return response.json()
+    except:
+        return {"Items": None}
 
 
 def get_leaf_stone(auth):
@@ -91,7 +94,10 @@ def get_leaf_stone(auth):
 
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
-    return response.json()
+    try:
+        return response.json()
+    except:
+        return {"Items": None}
 
 
 def get_engrave(name, auth):
@@ -112,7 +118,10 @@ def get_engrave(name, auth):
 
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
-    return response.json()
+    try:
+        return response.json()
+    except:
+        return {"Items": None}
 
 
 def get_engrave_rank(auth):
@@ -133,7 +142,34 @@ def get_engrave_rank(auth):
 
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
-    return response.json()
+    try:
+        return response.json()
+    except:
+        return {"Items": None}
+
+
+def get_avatar(name, character_class, auth):
+    data_dict = {}
+
+    data_dict["Sort"] = "GRADE"
+    data_dict["CategoryCode"] = 20000
+    data_dict["CharacterClass"] = character_class
+    data_dict["ItemTier"] = None
+    data_dict["ItemGrade"] = ""
+    data_dict["ItemName"] = name
+    data_dict["PageNo"] = 0
+    data_dict["SortCondition"] = "DESC"
+
+    data = json.dumps(data_dict)
+
+    request_url = main_url + "/markets/items"
+
+    response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
+
+    try:
+        return response.json()
+    except:
+        return {"Items": None}
 
 
 def get_island_info(auth):

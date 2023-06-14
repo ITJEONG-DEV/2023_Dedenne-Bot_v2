@@ -264,3 +264,46 @@ async def search_engrave(message, auth, icon_url):
             embeds.append(embed)
 
         await send_message(message.channel, embeds=embeds)
+
+
+async def search_avatar(message, auth, icon_url):
+    max_count = 4
+    content = message.content.split()[1:]
+
+    if "직업" in message.content:
+        name = ' '.join(content[:-1])
+        character_class = content[-1].split("=")[1]
+    else:
+        name = ' '.join(content[:])
+        character_class = ''
+
+    print(name, character_class)
+
+    avatar_info = get_avatar(name, character_class, auth)["Items"]
+
+    if avatar_info is None:
+        if character_class == "":
+            return await send_message(message.channel, message=f"{name} 아바타를 검색할 수 없어요")
+        else:
+            return await send_message(message.channel, message=f"{character_class} 직업의 {name} 아바타를 검색할 수 없어요")
+
+    embeds = []
+    now = datetime.datetime.now()
+    for i in range(max_count if max_count < len(avatar_info) else len(avatar_info)):
+        item = avatar_info[i]
+
+        embed = discord.Embed(
+            title=f"{item['Name']}",
+            color=discord.Color.blue()
+        )
+        embed.set_thumbnail(url=item["Icon"])
+        embed.set_footer(text=f"{now} 기준", icon_url=icon_url)
+
+        embed.add_field(name="전날 평균 판매가", value=item["YDayAvgPrice"])
+        embed.add_field(name="최근 판매가", value=item["RecentPrice"])
+        embed.add_field(name="현재 최저가", value=item["CurrentMinPrice"])
+        embed.add_field(name="구매 시 거래 가능 횟수", value=item["TradeRemainCount"])
+
+        embeds.append(embed)
+
+    await send_message(message.channel, embeds=embeds)

@@ -55,6 +55,9 @@ class DedenneBot(discord.Client):
             elif command == "item":
                 await send_message(channel=message.channel, message="준비 중인 기능")
 
+            elif command == "avatar":
+                await search_avatar(message, self.lostark["apikeyauth"], self.icon)
+
             elif command == "mari":
                 await search_mari_shop(message)
 
