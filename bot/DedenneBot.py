@@ -59,7 +59,7 @@ class DedenneBot(discord.Client):
                 await search_mari_shop(message)
 
             elif command == "engrave":
-                await send_message(channel=message.channel, message="준비 중인 기능")
+                await search_engrave(message, self.lostark["apikeyauth"], self.icon)
 
             elif command == "gem":
                 await search_gem(message, self.lostark["apikeyauth"], self.icon)

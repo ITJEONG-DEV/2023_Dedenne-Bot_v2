@@ -157,3 +157,109 @@ async def search_leaf_stone(message, auth, icon_url):
 
     else:
         await send_message(message.channel, message=f"돌파석 시세를 검색할 수 없어요.")
+
+
+async def search_engrave(message, auth, icon_url):
+    def get_item_id(name):
+        keyword_dict = {
+            "스커": "스트라이커",
+            "디트": "디스트로이어",
+            "배마": "배틀마스터",
+            "알카": "아르카나",
+            "데헌": "데빌헌터",
+            "가짜건슬": "데빌헌터",
+            "홀나": "홀리나이트",
+
+            "구동": "구슬동자",
+            "강무": "강화 무기",
+            "결대": "결투의 대가",
+            "극의체술": "극의:",
+            "급타": "급소타격",
+            "고기": "고독한 기사",
+            "기대": "기습의 대가",
+            "달소": "달의 소리",
+            "달저": "달인의 저력",
+            "돌대": "돌격대장",
+            "마효증": "마나 효율 증가",
+            "마흐": "마나의 흐름",
+            "부뼈": "부러진 뼈",
+            "분망": "분노의 망치",
+            "번분": "번개의 분노",
+            "사시": "사냥의 시간",
+            "상소": "상급 소환사",
+            "선필": "선수필승",
+            "시집": "시선 집중",
+            "아기": "아르데타인의 기술",
+            "안상": "안정된 상태",
+            "약무": "약자 무시",
+            "예둔": "예리한 둔기",
+            "저받": "저주받은",
+            "전태": "전투 태세",
+            "절구": "절실한 구원",
+            "정단": "정밀 단도",
+            "정흡": "정기 흡수",
+            "중수": "중력 수련",
+            "중착": "중갑 착용",
+            "진용": "진실된 용맹",
+            "질증": "질량 증가",
+            "최마증": "최대 마나 증가",
+            "충단": "충격 단련",
+            "타대": "타격의 대가",
+            "폭전": "폭발물 전문가",
+            "피메": "피스메이커",
+            "핸건": "핸드거너"
+        }
+
+        if name in keyword_dict.keys():
+            name = keyword_dict[name]
+
+        return name
+
+    keyword = get_item_id(message.content.split()[-1])
+
+    if keyword == "순위":
+        data = get_engrave_rank(auth)["Items"]
+
+    else:
+        data = get_engrave(keyword, auth)["Items"]
+
+    if len(data) == 0:
+        return await send_message(message.channel, f"{keyword} 각인서를 찾을 수 없습니다")
+
+    embeds = []
+
+    if keyword == "순위":
+        for i in range(5):
+            item = data[i]
+
+            embed = discord.Embed(
+                title=f"{item['Name']} 시세",
+                color=discord.Color.blue()
+            )
+            embed.set_footer(icon_url=icon_url)
+
+            embed.add_field(name="전날 평균 판매가", value=item["YDayAvgPrice"])
+            embed.add_field(name="최근 판매가", value=item["RecentPrice"])
+            embed.add_field(name="현재 최저가", value=item["CurrentMinPrice"])
+            embed.set_thumbnail(url=item["Icon"])
+
+            embeds.append(embed)
+
+        await send_message(message.channel, message="전설 각인서 시세 순위 TOP 5", embeds=embeds)
+
+    else:
+        for item in data:
+            embed = discord.Embed(
+                title=f"{item['Name']} 시세",
+                color=discord.Color.blue()
+            )
+            embed.set_footer(icon_url=icon_url)
+
+            embed.add_field(name="전날 평균 판매가", value=item["YDayAvgPrice"])
+            embed.add_field(name="최근 판매가", value=item["RecentPrice"])
+            embed.add_field(name="현재 최저가", value=item["CurrentMinPrice"])
+            embed.set_thumbnail(url=item["Icon"])
+
+            embeds.append(embed)
+
+        await send_message(message.channel, embeds=embeds)

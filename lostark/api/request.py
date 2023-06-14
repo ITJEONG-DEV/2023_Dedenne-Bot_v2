@@ -92,3 +92,45 @@ def get_leaf_stone(auth):
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
     return response.json()
+
+
+def get_engrave(name, auth):
+    data_dict = {}
+
+    data_dict["Sort"] = "RECENT_PRICE"
+    data_dict["CategoryCode"] = 40000
+    data_dict["CharacterClass"] = ""
+    data_dict["ItemTier"] = None
+    data_dict["ItemGrade"] = "전설"
+    data_dict["ItemName"] = name
+    data_dict["PageNo"] = 0
+    data_dict["SortCondition"] = "DESC"
+
+    data = json.dumps(data_dict)
+
+    request_url = main_url + "/markets/items"
+
+    response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
+
+    return response.json()
+
+
+def get_engrave_rank(auth):
+    data_dict = {}
+
+    data_dict["Sort"] = "RECENT_PRICE"
+    data_dict["CategoryCode"] = 40000
+    data_dict["CharacterClass"] = ""
+    data_dict["ItemTier"] = None
+    data_dict["ItemGrade"] = "전설"
+    data_dict["ItemName"] = ""
+    data_dict["PageNo"] = 0
+    data_dict["SortCondition"] = "DESC"
+
+    data = json.dumps(data_dict)
+
+    request_url = main_url + "/markets/items"
+
+    response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
+
+    return response.json()
