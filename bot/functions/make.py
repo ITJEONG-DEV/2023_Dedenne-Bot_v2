@@ -12,14 +12,14 @@ async def make_gif(message):
         # parsed option
         option = message.content.split()
 
-        duration = 0.3
+        duration = 500
 
         if len(option) > 1:
             for i in range(1, len(option)):
                 word = option[i]
 
                 if "duration" in word:
-                    duration = float(word.split("=")[1])
+                    duration = float(word.split("=")[1]) * 1000
 
         dir_name = f'{message.author.id}_{datetime.datetime.now().strftime("%Y%m%d_%H%M%S")}'
 
@@ -32,6 +32,6 @@ async def make_gif(message):
 
             images.append(imageio.imread(filename))
 
-        imageio.mimsave(f'result/{dir_name}/result.gif', images, duration=duration)
+        imageio.mimsave(f'result/{dir_name}/result.gif', images, duration=duration, loop=0)
 
         await send_message(message.channel, file=discord.File(f'result/{dir_name}/result.gif'))

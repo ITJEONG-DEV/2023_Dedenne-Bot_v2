@@ -105,7 +105,8 @@ async def search_gem(message, auth, icon_url):
             item_name = item_name[:-1] + "레벨 멸화의 보석"
             # item_name.replace("멸", "레벨 멸화의 보석")
         else:
-            item_name += "레벨"
+            if "레벨" not in item_name:
+                item_name += "레벨"
 
     result_items = get_gems(item_name, auth)["Items"]
 
@@ -113,7 +114,7 @@ async def search_gem(message, auth, icon_url):
         image_url = result_items[0]["Icon"]
 
         embed = discord.Embed(
-            title=f"{item_name} 검색 결과",
+            title=f"{result_items[0]['Name']} 검색 결과",
             color=discord.Color.blue()
         )
         embed.set_footer(text=f"{datetime.datetime.now()} 기준", icon_url=icon_url)
@@ -245,7 +246,7 @@ async def search_engrave(message, auth, icon_url):
 
             embeds.append(embed)
 
-        await send_message(message.channel, message="전설 각인서 시세 순위 TOP 5", embeds=embeds)
+        await send_message(message.channel, message="전설 각인서 순위 TOP 5", embeds=embeds)
 
     else:
         for item in data:
