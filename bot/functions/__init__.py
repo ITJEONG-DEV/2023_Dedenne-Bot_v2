@@ -1,4 +1,4 @@
 from .send import *
-from .seach import *
+from .search import *
 from .show import *
 from .make import *

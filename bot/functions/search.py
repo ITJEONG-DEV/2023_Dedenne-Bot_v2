@@ -1,6 +1,8 @@
 import discord
+import datetime
 
-from lostark import get_character_data, get_mari_shop
+from lostark.crawling import get_character_data, get_mari_shop
+from lostark.api import *
 from .send import send_message
 from ..views import CharacterView, MariShopView
 
@@ -87,3 +89,43 @@ async def search_mari_shop(message):
     message = await send_message(message.channel, embed=options.embeds["성장 추천"], view=options)
     options.set_message(message)
 
+
+async def search_gem(message, auth, icon_url):
+    words = message.content.split()
+
+    item_name = ""
+
+    if len(words) >= 2:
+        item_name = words[1]
+
+        if "홍" in item_name:
+            item_name = item_name[:-1] + "레벨 홍염의 보석"
+            # item_name.replace("홍", "레벨 홍염의 보석")
+        elif "멸" in item_name:
+            item_name = item_name[:-1] + "레벨 멸화의 보석"
+            # item_name.replace("멸", "레벨 멸화의 보석")
+        else:
+            item_name += "레벨"
+
+    result_items = get_gems(item_name, auth)["Items"]
+
+    if result_items:
+        image_url = result_items[0]["Icon"]
+
+        embed = discord.Embed(
+            title=f"{item_name} 검색 결과",
+            color=discord.Color.blue()
+        )
+        embed.set_footer(text=f"{datetime.datetime.now()} 기준", icon_url=icon_url)
+        embed.set_thumbnail(url=image_url)
+
+        str_field = ""
+        for item in result_items:
+            str_field += f'{item["Name"]} {item["AuctionInfo"]["BuyPrice"]}골드\n'
+
+        embed.add_field(name="매물", value=str_field)
+
+        await send_message(message.channel, embed=embed)
+
+    else:
+        await send_message(message.channel, message=f"{' '.join(words[1:])}에 해당하는 매물이 없어요")

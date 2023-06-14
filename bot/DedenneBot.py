@@ -62,7 +62,7 @@ class DedenneBot(discord.Client):
                 await send_message(channel=message.channel, message="준비 중인 기능")
 
             elif command == "gem":
-                await send_message(channel=message.channel, message="준비 중인 기능")
+                await search_gem(message, self.lostark["apikeyauth"], self.icon)
 
             elif command == "occup":
                 await send_occup_message(message, self.icon)
