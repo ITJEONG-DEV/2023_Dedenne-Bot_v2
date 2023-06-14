@@ -64,6 +64,9 @@ class DedenneBot(discord.Client):
             elif command == "gem":
                 await search_gem(message, self.lostark["apikeyauth"], self.icon)
 
+            elif command == "leafstone":
+                await search_leaf_stone(message, self.lostark["apikeyauth"], self.icon)
+
             elif command == "occup":
                 await send_occup_message(message, self.icon)
 

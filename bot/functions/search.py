@@ -129,3 +129,31 @@ async def search_gem(message, auth, icon_url):
 
     else:
         await send_message(message.channel, message=f"{' '.join(words[1:])}에 해당하는 매물이 없어요")
+
+
+async def search_leaf_stone(message, auth, icon_url):
+    result_items = get_leaf_stone(auth)["Items"]
+
+    if result_items:
+        time = datetime.datetime.now()
+        embeds = []
+
+        for i in range(2):
+            item = result_items[i]
+            embed = discord.Embed(
+                title=item["Name"],
+                color=discord.Color.blue()
+            )
+            embed.set_footer(text=f"{time} 기준", icon_url=icon_url)
+            embed.set_thumbnail(url=item["Icon"])
+
+            embed.add_field(name="전날 평균 판매가", value=item["YDayAvgPrice"])
+            embed.add_field(name="최근 판매가", value=item["RecentPrice"])
+            embed.add_field(name="현재 최저가", value=item["CurrentMinPrice"])
+
+            embeds.append(embed)
+
+        await send_message(message.channel, embeds=embeds)
+
+    else:
+        await send_message(message.channel, message=f"돌파석 시세를 검색할 수 없어요.")

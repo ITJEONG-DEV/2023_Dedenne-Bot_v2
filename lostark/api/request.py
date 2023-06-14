@@ -71,3 +71,24 @@ def get_gems(name, auth):
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
     return response.json()
+
+
+def get_leaf_stone(auth):
+    data_dict = {}
+
+    data_dict["Sort"] = "RECENT_PRICE"
+    data_dict["CategoryCode"] = 50010
+    data_dict["CharacterClass"] = ""
+    data_dict["ItemTier"] = 3
+    data_dict["ItemGrade"] = "희귀"
+    data_dict["ItemName"] = "돌파석"
+    data_dict["PageNo"] = 0
+    data_dict["SortCondition"] = "DESC"
+
+    data = json.dumps(data_dict)
+
+    request_url = main_url + "/markets/items"
+
+    response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
+
+    return response.json()
