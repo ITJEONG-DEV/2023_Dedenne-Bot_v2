@@ -27,13 +27,11 @@ class SearchButton(discord.ui.Button):
         character_class = self.__view.character_class.selection
         keyword = self.__view.keyword
 
-        print(category, grade, tier, character_class, keyword)
-
         result = get_item(category, character_class, tier, grade, keyword, self.__view.auth)["Items"]
 
         if result is None:
             embed = discord.Embed(
-                title="검색 결과",
+                title="검색 결과 없음",
                 color=discord.Color.blue()
             )
             await self.__view.message.edit(embed=embed)

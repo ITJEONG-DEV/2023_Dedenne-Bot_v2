@@ -32,6 +32,10 @@ class DedenneBot(discord.Client):
 
         # 957221859953352725 여기가 어디죠?
         # 1021645719528022077 디스코드봇 테스트용 서버
+
+        if message.guild is None:
+            return
+
         if message.guild.id == 957221859953352725:
             if str(message.channel) != '봇':
                 return

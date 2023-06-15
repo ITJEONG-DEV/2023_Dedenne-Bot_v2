@@ -277,8 +277,6 @@ async def search_avatar(message, auth, icon_url):
         name = ' '.join(content[:])
         character_class = ''
 
-    print(name, character_class)
-
     avatar_info = get_avatar(name, character_class, auth)["Items"]
 
     if avatar_info is None:
