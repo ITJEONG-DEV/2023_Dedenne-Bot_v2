@@ -50,11 +50,11 @@ async def show_doguard(message, auth, icon_url):
         await send_message(message.channel, message="정보를 조회할 수 없습니다.")
 
 
-async def show_news(message, auth, icon_url):
-    data = get_news(auth)
+async def show_events(message, auth, icon_url):
+    data = get_events(auth)
 
     if data is None:
-        await send_message(channel=message.channel, message="로스트아크 소식 정보를 조회할 수 없어요.")
+        await send_message(channel=message.channel, message="이벤트 정보를 조회할 수 없어요.")
 
     else:
         embeds = []
@@ -79,6 +79,31 @@ async def show_news(message, auth, icon_url):
 
         if len(embeds) > 0:
             await send_message(message.channel, embeds=embeds)
+
+
+async def show_notices(message, auth, icon_url):
+    max_count = 5
+    data = get_notices('', auth)
+
+    if data is None:
+        await send_message(channel=message.channel, message="공지 정보를 조회할 수 없어요.")
+
+    else:
+        embeds = []
+        for i in range(max_count if max_count < len(data) else len(data)):
+            news = data[i]
+
+            embed = discord.Embed(
+                title=news["Type"] + news["Title"],
+                url=news["Link"],
+                color=discord.Color.blue()
+            )
+
+            embed.set_footer(text=f"{news['Date']}", icon_url=icon_url)
+
+            embeds.append(embed)
+
+        await send_message(message.channel, embeds=embeds)
 
 
 async def show_adventure_island(message, auth, icon_url):

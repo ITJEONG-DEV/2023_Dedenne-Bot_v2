@@ -17,13 +17,36 @@ class DedenneBot(discord.Client):
 
         self.icon = "https://cdn-lostark.game.onstove.com/2018/obt/assets/images/common/icon/favicon-192.png"
 
+    def check_update_available(self):
+        content = ""
+        with open("./private/update.txt", "r", encoding="utf-8") as txt:
+            content = txt.read()
+
+        open("./private/update.txt", "w").close()
+
+        if len(content) > 10:
+            return content
+        else:
+            return None
+
     async def on_ready(self):
-        for guild in self.guilds:
-            if guild.id == 1021645719528022077:
-                for channel in guild.text_channels:
-                    if "데덴네" in channel.name or "봇" in channel.name:
-                        # await channel.send("안녕하세요? 데덴네봇 영업 시작합니다.")
-                        pass
+
+        update_content = self.check_update_available()
+
+        if update_content:
+            for guild in self.guilds:
+                if guild.id == 957221859953352725:
+                    for channel in guild.text_channels:
+                        if "봇" in channel.name:
+                            await channel.send(update_content)
+
+                else:
+                    for channel in guild.text_channels:
+                        if "데덴네" in channel.name:
+                            await channel.send(update_content)
+                            
+        else:
+            print("업데이트 내용이 없음")
 
     async def on_message(self, message):
         await self.wait_until_ready()
@@ -88,8 +111,12 @@ class DedenneBot(discord.Client):
             elif command == "doguard":
                 await show_doguard(message, self.lostark["apikeyauth"], self.icon)
 
-            elif command == "news":
-                await show_news(message, self.lostark["apikeyauth"], self.icon)
+            elif command == "events":
+                await show_events(message, self.lostark["apikeyauth"], self.icon)
+
+            elif command == "notices":
+                # await send_message(message.channel, "현재 준비중인 기능입니당")
+                await show_notices(message, self.lostark["apikeyauth"], self.icon)
 
             elif command == "gif":
                 await make_gif(message)
@@ -101,6 +128,3 @@ class DedenneBot(discord.Client):
                     return item["return"]
 
         return None
-
-
-
