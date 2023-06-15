@@ -1,9 +1,11 @@
 import discord
+from discord import app_commands
 
 from bot.DedenneBot import DedenneBot
 from util import parse_json
 
 import os
+
 path = os.path.dirname(os.path.abspath(__file__))
 
 my_intents = discord.Intents.default()
@@ -13,4 +15,5 @@ my_intents.presences = False
 my_intents.members = True
 
 client = DedenneBot(intents=my_intents)
+
 client.run(token=parse_json("./private/discord.json")["token"])  # 토큰

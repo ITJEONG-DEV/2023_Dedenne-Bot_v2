@@ -22,7 +22,8 @@ class DedenneBot(discord.Client):
             if guild.id == 1021645719528022077:
                 for channel in guild.text_channels:
                     if "데덴네" in channel.name or "봇" in channel.name:
-                        await channel.send("안녕하세요? 데덴네봇 영업 시작합니다.")
+                        # await channel.send("안녕하세요? 데덴네봇 영업 시작합니다.")
+                        pass
 
     async def on_message(self, message):
         await self.wait_until_ready()
@@ -53,7 +54,8 @@ class DedenneBot(discord.Client):
                 await search_lostark(message)
 
             elif command == "item":
-                await send_message(channel=message.channel, message="준비 중인 기능")
+                # await send_message(channel=message.channel, message="준비 중인 기능")
+                await search_market(message, self.lostark["apikeyauth"], self.icon)
 
             elif command == "avatar":
                 await search_avatar(message, self.lostark["apikeyauth"], self.icon)
@@ -95,3 +97,6 @@ class DedenneBot(discord.Client):
                     return item["return"]
 
         return None
+
+
+

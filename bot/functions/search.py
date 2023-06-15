@@ -4,7 +4,7 @@ import datetime
 from lostark.crawling import get_character_data, get_mari_shop
 from lostark.api import *
 from .send import send_message
-from ..views import CharacterView, MariShopView
+from ..views import CharacterView, MariShopView, MarketView
 
 
 async def search_lostark(message):
@@ -307,3 +307,18 @@ async def search_avatar(message, auth, icon_url):
         embeds.append(embed)
 
     await send_message(message.channel, embeds=embeds)
+
+
+async def search_market(message, auth, icon_url):
+    if not message.content == "아이템":
+        words = message.content.split()
+        keyword = " ".join(words[1:])
+    else:
+        keyword = ""
+
+    options = MarketView(data=None)
+    message = await send_message(message.channel, message="검색 옵션을 설정합니다.", view=options)
+    options.set_message(message)
+    options.keyword = keyword
+    options.auth = auth
+    options.icon_url = icon_url

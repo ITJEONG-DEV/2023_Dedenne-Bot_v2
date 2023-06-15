@@ -172,6 +172,30 @@ def get_avatar(name, character_class, auth):
         return {"Items": None}
 
 
+def get_item(category, character_class, tier, grade, name, auth):
+    data_dict = {}
+
+    data_dict["Sort"] = "GRADE"
+    data_dict["CategoryCode"] = category
+    data_dict["CharacterClass"] = character_class
+    data_dict["ItemTier"] = tier
+    data_dict["ItemGrade"] = grade
+    data_dict["ItemName"] = name
+    data_dict["PageNo"] = 0
+    data_dict["SortCondition"] = "DESC"
+
+    data = json.dumps(data_dict)
+
+    request_url = main_url + "/markets/items"
+
+    response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
+
+    try:
+        return response.json()
+    except:
+        return {"Items": None}
+
+
 def get_island_info(auth):
     request_url = main_url + "/gamecontents/calendar"
 
