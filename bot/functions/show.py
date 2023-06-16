@@ -2,6 +2,7 @@ import discord
 
 from lostark.api import *
 from .send import send_message
+from ..views import NoticeView
 
 
 async def show_dobyss(message, auth, icon_url):
@@ -89,12 +90,13 @@ async def show_notices(message, auth, icon_url):
         await send_message(channel=message.channel, message="공지 정보를 조회할 수 없어요.")
 
     else:
+        options = NoticeView(data, max_count)
         embeds = []
         for i in range(max_count if max_count < len(data) else len(data)):
             news = data[i]
 
             embed = discord.Embed(
-                title=news["Type"] + news["Title"],
+                title=f'[{news["Type"]}] {news["Title"]}',
                 url=news["Link"],
                 color=discord.Color.blue()
             )
@@ -102,8 +104,11 @@ async def show_notices(message, auth, icon_url):
             embed.set_footer(text=f"{news['Date']}", icon_url=icon_url)
 
             embeds.append(embed)
+        options.embeds[0] = embeds
 
-        await send_message(message.channel, embeds=embeds)
+        message = await send_message(message.channel, message=f"page {options.page + 1}/{options.max_page}",
+                                     embeds=options.embeds[0], view=options)
+        options.set_message(message)
 
 
 async def show_adventure_island(message, auth, icon_url):

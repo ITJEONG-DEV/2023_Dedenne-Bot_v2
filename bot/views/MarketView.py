@@ -1,7 +1,7 @@
 import datetime
 import discord
 
-from .View import DefaultView
+from .DefaultView import DefaultView
 from ..selects import *
 from ..functions import send_message
 

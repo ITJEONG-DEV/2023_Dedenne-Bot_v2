@@ -44,7 +44,7 @@ class DedenneBot(discord.Client):
                     for channel in guild.text_channels:
                         if "데덴네" in channel.name:
                             await channel.send(update_content)
-                            
+
         else:
             print("업데이트 내용이 없음")
 
@@ -115,8 +115,11 @@ class DedenneBot(discord.Client):
                 await show_events(message, self.lostark["apikeyauth"], self.icon)
 
             elif command == "notices":
-                # await send_message(message.channel, "현재 준비중인 기능입니당")
                 await show_notices(message, self.lostark["apikeyauth"], self.icon)
+
+            elif command == "guild":
+                # await show_guilds(message, self.lostark["apikeyauth"], self.icon
+                await send_message(message.channel, "현재 준비중인 기능입니당")
 
             elif command == "gif":
                 await make_gif(message)

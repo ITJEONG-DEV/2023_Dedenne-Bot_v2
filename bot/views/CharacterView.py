@@ -1,6 +1,6 @@
 import discord
 
-from .View import DefaultView
+from .DefaultView import DefaultView
 from lostark.crawling.data import *
 
 
