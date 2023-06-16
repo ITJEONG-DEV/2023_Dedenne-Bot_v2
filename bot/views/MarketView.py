@@ -1,87 +1,94 @@
-import datetime
+import math
+
 import discord
 
 from .DefaultView import DefaultView
-from ..selects import *
-from ..functions import send_message
-
-from lostark.api import get_item
 
 
-class SearchButton(discord.ui.Button):
-    def __init__(self, view):
-        super().__init__()
+class MarketView(DefaultView):
+    def __init__(self, data, page_per_item, time):
+        super().__init__(data)
+        self.max = page_per_item
+        self.time = time
 
-        self.label = "검색"
-        self.style = discord.ButtonStyle.grey
+        print(len(data))
 
-        self.__view = view
+        self.page = 0
+        self.max_page = math.ceil(len(data) / page_per_item)
 
-    async def callback(self, interaction):
-        if self.__view.category.selection == self.__view.category.default:
-            return await interaction.response.defer()
+        self.left = discord.ui.Button()
+        self.left.emoji = "◀"
+        self.left.style = discord.ButtonStyle.grey
+        self.left.callback = self.move_left_page
+        self.add_item(self.left)
 
-        category = self.__view.category.selection
-        grade = self.__view.grade.selection
-        tier = self.__view.tier.selection
-        character_class = self.__view.character_class.selection
-        keyword = self.__view.keyword
+        self.right = discord.ui.Button()
+        self.right.emoji = "▶"
+        self.right.style = discord.ButtonStyle.grey
+        self.right.callback = self.move_right_page
+        self.add_item(self.right)
 
-        result = get_item(category, character_class, tier, grade, keyword, self.__view.auth)["Items"]
+    async def move_left_page(self, interaction):
+        if self.page > 0:
+            self.page -= 1
 
-        if result is None:
-            embed = discord.Embed(
-                title="검색 결과 없음",
-                color=discord.Color.blue()
-            )
-            await self.__view.message.edit(embed=embed)
-
-        else:
+        if self.page not in self.embeds.keys():
             embeds = []
+            for i in range(self.max):
+                if len(self.data) <= self.page * self.max + i:
+                    break
 
-            now = datetime.datetime.now()
-            for i in range(self.__view.max_count if self.__view.max_count < len(result) else len(result)):
-                item = result[i]
+                item = self.data[self.page * self.max + i]
 
                 embed = discord.Embed(
                     title=f"{item['Name']}",
                     color=discord.Color.blue()
                 )
                 embed.set_thumbnail(url=item["Icon"])
-                embed.set_footer(text=f"{now} 기준", icon_url=self.__view.icon_url)
+                embed.set_footer(text=f"{self.time} 기준", icon_url=self.icon_url)
 
                 embed.add_field(name="전날 평균 판매가", value=item["YDayAvgPrice"])
                 embed.add_field(name="최근 판매가", value=item["RecentPrice"])
                 embed.add_field(name="현재 최저가", value=item["CurrentMinPrice"])
-                embed.add_field(name="구매 시 거래 가능 횟수", value=item["TradeRemainCount"])
+
+                if item["TradeRemainCount"] is not None:
+                    embed.add_field(name="구매 시 거래 가능 횟수", value=item["TradeRemainCount"])
 
                 embeds.append(embed)
 
-                self.__view.clear_items()
+            self.embeds[self.page] = embeds
 
-            await self.__view.message.edit(content='검색 결과', embeds=embeds, view=None)
-
+        await self.message.edit(content=f"page {self.page + 1}/{self.max_page}", embeds=self.embeds[self.page])
         await interaction.response.defer()
 
+    async def move_right_page(self, interaction):
+        if self.page < self.max_page - 1:
+            self.page += 1
 
-class MarketView(DefaultView):
-    def __init__(self, data):
-        super().__init__(data)
+        if self.page not in self.embeds.keys():
+            embeds = []
+            for i in range(self.max):
+                if len(self.data) <= self.page * self.max + i:
+                    break
 
-        self.keyword = ""
-        self.auth = ""
-        self.icon_url = ""
+                item = self.data[self.page * self.max + i]
 
-        self.max_count = 4
+                embed = discord.Embed(
+                    title=f"{item['Name']}",
+                    color=discord.Color.blue()
+                )
+                embed.set_thumbnail(url=item["Icon"])
+                embed.set_footer(text=f"{self.time} 기준", icon_url=self.icon_url)
 
-        self.category = CategorySelection()
-        self.grade = GradeSelection()
-        self.tier = TierSelection()
-        self.character_class = ClassSelection()
-        self.button = SearchButton(self)
+                embed.add_field(name="전날 평균 판매가", value=item["YDayAvgPrice"])
+                embed.add_field(name="최근 판매가", value=item["RecentPrice"])
+                embed.add_field(name="현재 최저가", value=item["CurrentMinPrice"])
+                if item["TradeRemainCount"] is not None:
+                    embed.add_field(name="구매 시 거래 가능 횟수", value=item["TradeRemainCount"])
 
-        self.add_item(self.category)
-        self.add_item(self.grade)
-        self.add_item(self.tier)
-        self.add_item(self.character_class)
-        self.add_item(self.button)
+                embeds.append(embed)
+
+            self.embeds[self.page] = embeds
+
+        await self.message.edit(content=f"page {self.page + 1}/{self.max_page}", embeds=self.embeds[self.page])
+        await interaction.response.defer()

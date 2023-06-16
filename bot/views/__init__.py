@@ -1,4 +1,5 @@
 from .CharacterView import CharacterView
 from .MariShopView import MariShopView
-from .MarketView import MarketView
+from .MarketSearchView import MarketSearchView
 from .NoticeView import NoticeView
+from .MarketView import MarketView

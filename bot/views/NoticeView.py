@@ -1,17 +1,17 @@
+import math
+
 import discord
 
 from .DefaultView import DefaultView
 
 
 class NoticeView(DefaultView):
-    def __init__(self, data, max):
+    def __init__(self, data, page_per_item):
         super().__init__(data)
-        self.max = max
+        self.max = page_per_item
 
         self.page = 0
-        self.max_page = len(data) // max
-        if self.max_page == 0:
-            self.max_page = 1
+        self.max_page = math.ceil(len(data) / page_per_item)
 
         self.left = discord.ui.Button()
         self.left.emoji = "◀"
@@ -24,7 +24,6 @@ class NoticeView(DefaultView):
         self.right.style = discord.ButtonStyle.grey
         self.right.callback = self.move_right_page
         self.add_item(self.right)
-
 
     async def move_left_page(self, interaction):
         if self.page > 0:
@@ -50,7 +49,7 @@ class NoticeView(DefaultView):
 
             self.embeds[self.page] = embeds
 
-        await self.message.edit(content=f"page {self.page+1}/{self.max_page}", embeds=self.embeds[self.page])
+        await self.message.edit(content=f"page {self.page + 1}/{self.max_page}", embeds=self.embeds[self.page])
         await interaction.response.defer()
 
     async def move_right_page(self, interaction):
@@ -77,5 +76,5 @@ class NoticeView(DefaultView):
 
             self.embeds[self.page] = embeds
 
-        await self.message.edit(content=f"page {self.page+1}/{self.max_page}", embeds=self.embeds[self.page])
+        await self.message.edit(content=f"page {self.page + 1}/{self.max_page}", embeds=self.embeds[self.page])
         await interaction.response.defer()

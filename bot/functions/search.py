@@ -4,7 +4,7 @@ import datetime
 from lostark.crawling import get_character_data, get_mari_shop
 from lostark.api import *
 from .send import send_message
-from ..views import CharacterView, MariShopView, MarketView
+from ..views import CharacterView, MariShopView, MarketSearchView, MarketView
 
 
 async def search_lostark(message):
@@ -285,8 +285,9 @@ async def search_avatar(message, auth, icon_url):
         else:
             return await send_message(message.channel, message=f"{character_class} 직업의 {name} 아바타를 검색할 수 없어요")
 
+    options = MarketView(avatar_info, max_count, datetime.datetime.now())
+
     embeds = []
-    now = datetime.datetime.now()
     for i in range(max_count if max_count < len(avatar_info) else len(avatar_info)):
         item = avatar_info[i]
 
@@ -295,16 +296,22 @@ async def search_avatar(message, auth, icon_url):
             color=discord.Color.blue()
         )
         embed.set_thumbnail(url=item["Icon"])
-        embed.set_footer(text=f"{now} 기준", icon_url=icon_url)
+        embed.set_footer(text=f"{options.time} 기준", icon_url=icon_url)
 
         embed.add_field(name="전날 평균 판매가", value=item["YDayAvgPrice"])
         embed.add_field(name="최근 판매가", value=item["RecentPrice"])
         embed.add_field(name="현재 최저가", value=item["CurrentMinPrice"])
-        embed.add_field(name="구매 시 거래 가능 횟수", value=item["TradeRemainCount"])
+
+        if item["TradeRemainCount"] is not None:
+            embed.add_field(name="구매 시 거래 가능 횟수", value=item["TradeRemainCount"])
 
         embeds.append(embed)
 
-    await send_message(message.channel, embeds=embeds)
+        options.embeds[0] = embeds
+
+    message = await send_message(message.channel, message=f"page {options.page + 1}/{options.max_page}",
+                                 embeds=options.embeds[0], view=options)
+    options.set_message(message)
 
 
 async def search_market(message, auth, icon_url):
@@ -314,7 +321,7 @@ async def search_market(message, auth, icon_url):
     else:
         keyword = ""
 
-    options = MarketView(data=None)
+    options = MarketSearchView(data=None)
     message = await send_message(message.channel, message="검색 옵션을 설정합니다.", view=options)
     options.set_message(message)
     options.keyword = keyword
