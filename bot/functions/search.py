@@ -277,9 +277,14 @@ async def search_avatar(message, auth, icon_url):
         name = ' '.join(content[:])
         character_class = ''
 
+
+
+
+
+
     avatar_info = get_avatar(name, character_class, auth)["Items"]
 
-    if avatar_info is None:
+    if avatar_info is None or len(avatar_info) == 0:
         if character_class == "":
             return await send_message(message.channel, message=f"{name} 아바타를 검색할 수 없어요")
         else:
