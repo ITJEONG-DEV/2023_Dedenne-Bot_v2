@@ -1,4 +1,5 @@
 import os
+import platform
 import datetime
 
 from PIL import Image, ImageDraw, ImageFont
@@ -10,21 +11,32 @@ path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
 
 test = False
 
-if test:
-    title_font = ImageFont.truetype("C:/USERS/DEV2/APPDATA/LOCAL/MICROSOFT/WINDOWS/FONTS/NANUMBARUNGOTHICBOLD.TTF",
-                                    size=40)
-    time_font = ImageFont.truetype("C:/USERS/DEV2/APPDATA/LOCAL/MICROSOFT/WINDOWS/FONTS/NANUMBARUNGOTHIC.TTF", size=32)
-    island_font = ImageFont.truetype("C:/USERS/DEV2/APPDATA/LOCAL/MICROSOFT/WINDOWS/FONTS/NANUMBARUNGOTHIC.TTF",
-                                     size=28)
-    island_type_font = ImageFont.truetype(
-        "C:/USERS/DEV2/APPDATA/LOCAL/MICROSOFT/WINDOWS/FONTS/NANUMBARUNGOTHICBOLD.TTF",
-        size=28)
-else:
+# if test:
+#     title_font = ImageFont.truetype("C:/USERS/DEV2/APPDATA/LOCAL/MICROSOFT/WINDOWS/FONTS/NANUMBARUNGOTHICBOLD.TTF",
+#                                     size=40)
+#     time_font = ImageFont.truetype("C:/USERS/DEV2/APPDATA/LOCAL/MICROSOFT/WINDOWS/FONTS/NANUMBARUNGOTHIC.TTF", size=32)
+#     island_font = ImageFont.truetype("C:/USERS/DEV2/APPDATA/LOCAL/MICROSOFT/WINDOWS/FONTS/NANUMBARUNGOTHIC.TTF",
+#                                      size=28)
+#     island_type_font = ImageFont.truetype(
+#         "C:/USERS/DEV2/APPDATA/LOCAL/MICROSOFT/WINDOWS/FONTS/NANUMBARUNGOTHICBOLD.TTF",
+#         size=28)
+
+if "Window" in platform.platform():
     print(path)
     title_font = ImageFont.truetype(path + "/font/NANUMBARUNGOTHICBOLD.TTF", size=40)
     time_font = ImageFont.truetype(path + "/font/NANUMBARUNGOTHIC.TTF", size=32)
     island_font = ImageFont.truetype(path + "/font/NANUMBARUNGOTHIC.TTF", size=28)
     island_type_font = ImageFont.truetype(path + "/font/NANUMBARUNGOTHICBOLD.TTF", size=28)
+elif "Linux" in platform.platform():
+    import glob
+
+    font_dir = "/usr/share/fonts/truetype/nanum"
+    ttf_files = glob.glob(f"{font_dir}/*.ttf")
+
+    title_font = ImageFont.truetype(ttf_files[-4], size=40)
+    time_font = ImageFont.truetype(ttf_files[-1], size=32)
+    island_font = ImageFont.truetype(ttf_files[-1], size=28)
+    island_type_font = ImageFont.truetype(ttf_files[-4], size=28)
 
 
 def filter_data(auth):
@@ -264,12 +276,14 @@ def make_daily_adventure_island(island_rewards_infoes, date_text):
         x, y = (window_size[0] - w) / 2, h
         drawable_image.text((x, y), date_text, fill=title_color, font=title_font)
 
-        group1 = dict(filter(lambda e: e["time"] == '09', island_rewards_infoes.items()))
+        print(island_rewards_infoes)
+
+        group1 = list(filter(lambda e: e["time"] == '09', island_rewards_infoes))
         island_content_1 = make_island_content(group1, "09:00/11:00/13:00")
         start_x, start_y = icon_size[0] - margin, icon_size[1] + content_gap
         daily_adventure_island_content.paste(island_content_1, (start_x, start_y), island_content_1)
 
-        group2 = dict(filter(lambda e: e["time"] == '19', island_rewards_infoes.items()))
+        group2 = list(filter(lambda e: e["time"] == '19', island_rewards_infoes))
         island_content_2 = make_island_content(group2, "19:00/21:00/23:00")
         start_x, start_y = icon_size[0] - margin, icon_size[1] * 7 + content_gap * 4
         daily_adventure_island_content.paste(island_content_2, (start_x, start_y), island_content_2)
