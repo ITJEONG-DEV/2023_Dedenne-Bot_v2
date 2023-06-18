@@ -276,8 +276,6 @@ def make_daily_adventure_island(island_rewards_infoes, date_text):
         x, y = (window_size[0] - w) / 2, h
         drawable_image.text((x, y), date_text, fill=title_color, font=title_font)
 
-        print(island_rewards_infoes)
-
         group1 = list(filter(lambda e: e["time"] == '09', island_rewards_infoes))
         island_content_1 = make_island_content(group1, "09:00/11:00/13:00")
         start_x, start_y = icon_size[0] - margin, icon_size[1] + content_gap
