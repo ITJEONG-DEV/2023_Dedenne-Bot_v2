@@ -304,14 +304,15 @@ def make_daily_adventure_island(island_rewards_infoes, date_text):
 
 def get_adventure_island(auth):
     date = datetime.datetime.now().strftime("%Y-%m-%d")
-
-    island_info = filter_data(auth)
-
-    image = make_daily_adventure_island(island_info, f"{date} 모험섬 일정")
-    # link = f'./adventure_island/data/today/{date}.png'
     link = f'./result/today/{date}.png'
-    # link = f'D:/{date}.png'
-    image.save(link)
+
+    if not os.path.isfile(link):
+        island_info = filter_data(auth)
+
+        image = make_daily_adventure_island(island_info, f"{date} 모험섬 일정")
+        # link = f'./adventure_island/data/today/{date}.png'
+        # link = f'D:/{date}.png'
+        image.save(link)
 
     return link
 
