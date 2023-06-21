@@ -22,7 +22,6 @@ test = False
 #         size=28)
 
 if "Window" in platform.platform():
-    print(path)
     title_font = ImageFont.truetype(path + "/font/NANUMBARUNGOTHICBOLD.TTF", size=40)
     time_font = ImageFont.truetype(path + "/font/NANUMBARUNGOTHIC.TTF", size=32)
     island_font = ImageFont.truetype(path + "/font/NANUMBARUNGOTHIC.TTF", size=28)
@@ -321,7 +320,6 @@ if __name__ == "__main__":
     link = get_adventure_island(
         "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyIsImtpZCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyJ9.eyJpc3MiOiJodHRwczovL2x1ZHkuZ2FtZS5vbnN0b3ZlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbHVkeS5nYW1lLm9uc3RvdmUuY29tL3Jlc291cmNlcyIsImNsaWVudF9pZCI6IjEwMDAwMDAwMDAwMDA1MTMifQ.KJSweBbQpwz7OcYwY_Fc9FJDmSBL_8y0KqNXKq3KMC6vIgy-Cmsfzi7klAyjIJLGRB2SeW9sq--QbafkIHBeWUVD7jROy8mhLvKlr8vLnGJ5IePGriBtC6IB-Ma6Wr1w4Upa0jwBDE7eRwk6FPX21wrXnalqk-MpYpTBmPp1MmcaNVCoxZliMRsNtfrFrQE0RnceerNsBAoj6blyIt7wH9IB5dHTzLYEDVXBA6rQeS8gBzYzcKC4yWDcHSas6es_JqCykp-w9HdaT20YXZW0te3knRl2VZ3oOsVmCmCoPk3cSHaqaleesmabKnuWPd7sT6FCvdKeuhfCNvMNAze9nA")
 
-    # print(get_adventure_island('2023-03-11', False))
     # image = get_adventure_island(
     #     island=["하모니 섬", "죽음의 협곡", "고요한 안식의 섬", "하모니 섬", "죽음의 협곡", "고요한 안식의 섬"],
     #     reward=["카드", "실링", "골드", "카드", "실링", "골드"],

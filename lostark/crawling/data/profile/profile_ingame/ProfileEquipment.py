@@ -100,10 +100,6 @@ class ProfileEquipment:
 
                         self.__equipment_set_effect.add(f"{set_name}\t{name}\t{lv}\t{effect}")
 
-                        print(f"set_name: {set_name}, name: {name}, lv: {lv}, effect: {effect}")
-
-                    # print(item)
-
             except Exception:
                 continue
 
