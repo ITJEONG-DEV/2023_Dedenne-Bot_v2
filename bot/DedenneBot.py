@@ -42,7 +42,7 @@ class DedenneBot(discord.Client):
 
                 else:
                     for channel in guild.text_channels:
-                        if "데덴네" in channel.name:
+                        if "데덴네" in channel.name and "이벤트" not in channel.name:
                             await channel.send(update_content)
 
         else:
