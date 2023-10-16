@@ -77,6 +77,7 @@ class DedenneBot(discord.Client):
 
         if command is not None:
             if command == "help":
+                self.write_statistics(command)
                 await send_help_message(message)
 
             elif command == "search":
