@@ -48,32 +48,6 @@ class DedenneBot(discord.Client):
         else:
             print("업데이트 내용이 없음")
 
-    @tasks.loop(time=time)
-    async def on_alarm(self):
-        print("on_alarm")
-
-        data = parse_json("./private/alarm.json")
-
-        link = get_adventure_island(self.lostark["apikeyauth"])
-
-        alarm_type = "adventure_island"
-
-        for guild in self.guilds:
-            # if guild not in data.keys():
-            #     data[guild.id][type] = True
-
-            id = str(guild.id)
-
-            if id not in data.keys():
-                continue
-
-            elif data[id][alarm_type]:
-                if alarm_type == "adventure_island":
-                    for channel in guild.text_channels:
-                        if (id == "957221859953352725" and "봇" in channel.name) or "데덴네" in channel.name:
-                            await channel.send(file=discord.File(link))
-                            await channel.send(f"알림을 끄고 싶다면 '알림 해제'를 입력해 주세요. 서버 단위로 적용됩니다.")
-
     async def on_message(self, message):
         await self.wait_until_ready()
 
