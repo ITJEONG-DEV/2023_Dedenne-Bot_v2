@@ -66,6 +66,8 @@ class DedenneBot(discord.Client):
         else:
             if not str(message.channel).__contains__("데덴네"):
                 return
+            elif str(message.channel).__contains__("이벤트"):
+                return
 
         # 본인인 경우 응답하지 않음
         if message.author == self.user:
