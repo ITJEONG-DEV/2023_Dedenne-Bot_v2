@@ -7,8 +7,6 @@ from util import parse_json
 KOREA = datetime.timezone(datetime.timedelta(hours=9))
 time = datetime.time(hour=15, minute=38, tzinfo=KOREA)
 
-test = True
-
 class DedenneBot(discord.Client):
 
     def __init__(self, *, intents, **options):
@@ -33,10 +31,6 @@ class DedenneBot(discord.Client):
 
     async def on_ready(self):
         update_content = self.check_update_available()
-
-        if test:
-            for guild in self.guilds:
-                print(guild.id, guild.name)
 
         if update_content:
             for guild in self.guilds:
