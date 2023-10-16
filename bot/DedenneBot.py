@@ -7,6 +7,7 @@ from util import parse_json
 KOREA = datetime.timezone(datetime.timedelta(hours=9))
 time = datetime.time(hour=15, minute=38, tzinfo=KOREA)
 
+test = True
 
 class DedenneBot(discord.Client):
 
@@ -33,6 +34,10 @@ class DedenneBot(discord.Client):
     async def on_ready(self):
         update_content = self.check_update_available()
 
+        if test:
+            for guild in self.guilds:
+                print(guild.id, guild.name)
+
         if update_content:
             for guild in self.guilds:
                 if guild.id == 957221859953352725:
@@ -49,6 +54,9 @@ class DedenneBot(discord.Client):
             print("업데이트 내용이 없음")
 
     async def on_message(self, message):
+        if test:
+            return
+
         await self.wait_until_ready()
 
         # 데덴네봇을 위한 채널이 아닌 경우 응답하지 않음
@@ -175,7 +183,12 @@ class DedenneBot(discord.Client):
 
     async def send_statistics(self, channel):
         with open("private/statistics.txt", "r") as f:
-            await send_message(channel, message=f.read())
+            contents = f.read()
+
+            if len(contents) < 2:
+                await send_message(channel, message="No stat")
+            else:
+                await send_message(channel, message=f.read())
 
     async def clear_statistics(self, channel):
         with open("private/statistics.txt", "w") as f:
