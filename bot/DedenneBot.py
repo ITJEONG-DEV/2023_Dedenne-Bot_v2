@@ -179,7 +179,7 @@ class DedenneBot(discord.Client):
             if len(contents) < 2:
                 await send_message(channel, message="No stat")
             else:
-                await send_message(channel, message=f.read())
+                await send_message(channel, message=contents)
 
     async def clear_statistics(self, channel):
         with open("private/statistics.txt", "w") as f:
