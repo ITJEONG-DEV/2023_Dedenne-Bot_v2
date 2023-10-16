@@ -1,5 +1,5 @@
 import discord
-from discord import app_commands
+from discord.ext import tasks
 
 from bot.DedenneBot import DedenneBot
 from util import parse_json
@@ -15,5 +15,4 @@ my_intents.presences = False
 my_intents.members = True
 
 client = DedenneBot(intents=my_intents)
-
 client.run(token=parse_json("./private/discord.json")["token"])  # 토큰

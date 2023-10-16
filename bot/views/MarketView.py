@@ -11,8 +11,6 @@ class MarketView(DefaultView):
         self.max = page_per_item
         self.time = time
 
-        print(len(data))
-
         self.page = 0
         self.max_page = math.ceil(len(data) / page_per_item)
 

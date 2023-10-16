@@ -35,10 +35,8 @@ def get_mari_shop(base_url="https://lostark.game.onstove.com/Shop"):
 
 if __name__ == "__main__":
     # bs_object = get_html_object_korean()
-    # print(str(bs_object))
 
     data = get_character_data(character_name="평타맛있게치는사람")
 
     # data = get_mari_shop()
     # data = get_gold_info()
-    # print(str(data))
