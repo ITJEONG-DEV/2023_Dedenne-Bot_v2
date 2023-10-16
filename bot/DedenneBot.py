@@ -48,9 +48,6 @@ class DedenneBot(discord.Client):
             print("업데이트 내용이 없음")
 
     async def on_message(self, message):
-        if test:
-            return
-
         await self.wait_until_ready()
 
         # 데덴네봇을 위한 채널이 아닌 경우 응답하지 않음
