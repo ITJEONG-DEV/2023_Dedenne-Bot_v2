@@ -7,7 +7,6 @@ from util import parse_json
 KOREA = datetime.timezone(datetime.timedelta(hours=9))
 time = datetime.time(hour=15, minute=38, tzinfo=KOREA)
 
-
 class DedenneBot(discord.Client):
 
     def __init__(self, *, intents, **options):
@@ -42,37 +41,11 @@ class DedenneBot(discord.Client):
 
                 else:
                     for channel in guild.text_channels:
-                        if "데덴네" in channel.name:
+                        if "데덴네" in channel.name and "이벤트" not in channel.name:
                             await channel.send(update_content)
 
         else:
             print("업데이트 내용이 없음")
-
-    @tasks.loop(time=time)
-    async def on_alarm(self):
-        print("on_alarm")
-
-        data = parse_json("./private/alarm.json")
-
-        link = get_adventure_island(self.lostark["apikeyauth"])
-
-        alarm_type = "adventure_island"
-
-        for guild in self.guilds:
-            # if guild not in data.keys():
-            #     data[guild.id][type] = True
-
-            id = str(guild.id)
-
-            if id not in data.keys():
-                continue
-
-            elif data[id][alarm_type]:
-                if alarm_type == "adventure_island":
-                    for channel in guild.text_channels:
-                        if (id == "957221859953352725" and "봇" in channel.name) or "데덴네" in channel.name:
-                            await channel.send(file=discord.File(link))
-                            await channel.send(f"알림을 끄고 싶다면 '알림 해제'를 입력해 주세요. 서버 단위로 적용됩니다.")
 
     async def on_message(self, message):
         await self.wait_until_ready()
@@ -92,6 +65,8 @@ class DedenneBot(discord.Client):
         else:
             if not str(message.channel).__contains__("데덴네"):
                 return
+            elif str(message.channel).__contains__("이벤트"):
+                return
 
         # 본인인 경우 응답하지 않음
         if message.author == self.user:
@@ -101,57 +76,89 @@ class DedenneBot(discord.Client):
 
         if command is not None:
             if command == "help":
+                self.write_statistics(command)
                 await send_help_message(message)
 
             elif command == "search":
+                self.write_statistics(command)
                 await search_lostark(message)
 
             elif command == "item":
+                self.write_statistics(command)
+                apikeyauth = self.lostark["apikeyauth"] if message.guild.id % 2 == 1 else self.lostark["apikeyauth2"]
                 # await send_message(channel=message.channel, message="준비 중인 기능")
-                await search_market(message, self.lostark["apikeyauth"], self.icon)
+                await search_market(message, apikeyauth, self.icon)
 
             elif command == "avatar":
-                await search_avatar(message, self.lostark["apikeyauth"], self.icon)
+                self.write_statistics(command)
+                apikeyauth = self.lostark["apikeyauth"] if message.guild.id % 2 == 1 else self.lostark["apikeyauth2"]
+                await search_avatar(message, apikeyauth, self.icon)
 
             elif command == "mari":
+                self.write_statistics(command)
                 await search_mari_shop(message)
 
             elif command == "engrave":
-                await search_engrave(message, self.lostark["apikeyauth"], self.icon)
+                self.write_statistics(command)
+                apikeyauth = self.lostark["apikeyauth"] if message.guild.id % 2 == 1 else self.lostark["apikeyauth2"]
+                await search_engrave(message, apikeyauth, self.icon)
 
             elif command == "gem":
-                await search_gem(message, self.lostark["apikeyauth"], self.icon)
+                self.write_statistics(command)
+                apikeyauth = self.lostark["apikeyauth"] if message.guild.id % 2 == 1 else self.lostark["apikeyauth2"]
+                await search_gem(message, apikeyauth, self.icon)
 
             elif command == "leafstone":
-                await search_leaf_stone(message, self.lostark["apikeyauth"], self.icon)
+                self.write_statistics(command)
+                apikeyauth = self.lostark["apikeyauth"] if message.guild.id % 2 == 1 else self.lostark["apikeyauth2"]
+                await search_leaf_stone(message, apikeyauth, self.icon)
 
             elif command == "occup":
+                self.write_statistics(command)
                 await send_occup_message(message, self.icon)
 
             elif command == "island":
-                await show_adventure_island(message, self.lostark["apikeyauth"], self.icon)
+                self.write_statistics(command)
+                apikeyauth = self.lostark["apikeyauth"] if message.guild.id % 2 == 1 else self.lostark["apikeyauth2"]
+                await show_adventure_island(message, apikeyauth, self.icon)
 
             elif command == "dobyss":
-                await show_dobyss(message, self.lostark["apikeyauth"], self.icon)
+                self.write_statistics(command)
+                apikeyauth = self.lostark["apikeyauth"] if message.guild.id % 2 == 1 else self.lostark["apikeyauth2"]
+                await show_dobyss(message, apikeyauth, self.icon)
 
             elif command == "doguard":
-                await show_doguard(message, self.lostark["apikeyauth"], self.icon)
+                self.write_statistics(command)
+                apikeyauth = self.lostark["apikeyauth"] if message.guild.id % 2 == 1 else self.lostark["apikeyauth2"]
+                await show_doguard(message, apikeyauth, self.icon)
 
             elif command == "events":
-                await show_events(message, self.lostark["apikeyauth"], self.icon)
+                self.write_statistics(command)
+                apikeyauth = self.lostark["apikeyauth"] if message.guild.id % 2 == 1 else self.lostark["apikeyauth2"]
+                await show_events(message, apikeyauth, self.icon)
 
             elif command == "notices":
-                await show_notices(message, self.lostark["apikeyauth"], self.icon)
+                self.write_statistics(command)
+                apikeyauth = self.lostark["apikeyauth"] if message.guild.id % 2 == 1 else self.lostark["apikeyauth2"]
+                await show_notices(message, apikeyauth, self.icon)
 
             elif command == "guild":
+                self.write_statistics(command)
                 # await show_guilds(message, self.lostark["apikeyauth"], self.icon
                 await send_message(message.channel, "현재 준비중인 기능입니당")
 
             elif command == "alarm":
-                await set_alarm(message)
+                self.write_statistics(command)
+                await send_message(message.channel, "현재 준비중인 기능입니당")
 
             elif command == "gif":
                 await make_gif(message)
+
+            elif command == "stat" and message.guild.id == 1021645719528022077:
+                await self.send_statistics(message.channel)
+
+            elif command == "clear" and message.guild.id == 1021645719528022077:
+                await self.clear_statistics(message.channel)
 
     def get_return_words(self, message):
         for item in self.words:
@@ -160,3 +167,22 @@ class DedenneBot(discord.Client):
                     return item["return"]
 
         return None
+
+    def write_statistics(self, keyword):
+        with open("private/statistics.txt", "a") as f:
+            f.write(f"{keyword} {datetime.datetime.now().strftime('%Y%m%d %H%M%S')}\n")
+
+    async def send_statistics(self, channel):
+        with open("private/statistics.txt", "r") as f:
+            contents = f.read()
+
+            if len(contents) < 2:
+                await send_message(channel, message="No stat")
+            else:
+                await send_message(channel, message=contents)
+
+    async def clear_statistics(self, channel):
+        with open("private/statistics.txt", "w") as f:
+            pass
+
+        await send_message(channel, message="statistics file cleared")
