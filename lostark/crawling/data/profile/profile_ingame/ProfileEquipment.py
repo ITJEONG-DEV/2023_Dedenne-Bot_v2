@@ -1,7 +1,7 @@
 import re
 import json
 
-from . import Slot, Jewel, Card, CardEffect, CardDeck
+from . import Slot, Jewel, Card, CardEffect, CardDeck, ElixirEffect
 from . import ProfileAbilityEngrave
 from lostark.crawling.util import *
 
@@ -12,6 +12,8 @@ class ProfileEquipment:
 
         self.__equipment_slot = []
         self.__equipment_set_effect = set([])
+
+        self.__elixir = None
 
         self.__avatar_slot = []
         self.__jewel_slot = []
@@ -26,6 +28,9 @@ class ProfileEquipment:
         s += "\n착용 장비\n"
         for slot in self.__equipment_slot:
             s += str(slot) + "\n"
+
+        s += "\n엘릭서\n"
+        s += str(self.__elixir) + "\n"
 
         s += "\n장비 세트 효과\n"
         for slot in self.__equipment_set_effect:
@@ -87,7 +92,7 @@ class ProfileEquipment:
         if "topStr" not in item["value"]["Element_000"]:
             return False
 
-        if "엘릭서" not in item["value"]["Element_000"]["topStr"]:
+        if "연성 추가 효과" not in item["value"]["Element_000"]["topStr"]:
             return False
 
         return True
@@ -166,15 +171,25 @@ class ProfileEquipment:
                         continue
 
                     if self.__get_is_transcendence(item):
-                        print('transcendence')
+                        numberStr = get_bs_object(item["value"]["Element_000"]["contentStr"]["Element_001"]["contentStr"]).text
+
+                        # print(numberStr)
                         # 초월
                         pass
                     elif self.__get_is_elixir(item):
-                        print('elixir')
-                        # 엘릭서
-                        pass
+                        self.__elixir = ElixirEffect()
+
+                        topStr = get_bs_object(item["value"]["Element_000"]["topStr"])
+
+
+                        name = topStr.find("font", {"color": "#91FE02"}).text
+                        self.__elixir.set_name(name)
+
+                        for totalItem in item["value"]["Element_000"]["contentStr"].values():
+                            total = get_bs_object(totalItem).find("font", {"color":"#FFD200"}).text.split()[-1]
+                            self.__elixir.add(int(total))
+
                     elif self.__get_is_setname(item):
-                        print('set name', item)
                         # 세트명
                         set_name = get_bs_object(item["value"]["firstMsg"]).text
 
@@ -463,3 +478,7 @@ class ProfileEquipment:
     @property
     def ability_engrave_slot(self):
         return self.__ability_engrave
+
+    @property
+    def elixir(self):
+        return self.__elixir

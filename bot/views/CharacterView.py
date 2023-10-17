@@ -42,6 +42,11 @@ class CharacterView(DefaultView):
 
             self.embeds["기본 정보"] = embed
 
+            elixir = self.data.profile_ingame.profile_equipment.elixir
+            if elixir is not None:
+                m = f"`{elixir.name}`"
+                embed.add_field(name="엘릭서", value=m)
+
         await self.message.edit(embed=self.embeds["기본 정보"])
         await interaction.response.defer()
 

@@ -40,11 +40,12 @@ if __name__ == "__main__":
     # bs_object = get_html_object_korean()
 
     data = get_character_data(character_name="거리의아이")
+    # print(data.profile_ingame.profile_equipment)
 
-    import json
+    # import json
 
-    # character_name = "거리의아이"
-    # with open(f"{character_name}.json", "w") as t:
+    # character_name = "바드는죽어서힐을"
+    # with open(f"{character_name}.txt", "w") as t:
     #     data = get_html_object_korean(character_name=character_name)
     #
     #     t.write(data.prettify())

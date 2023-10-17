@@ -45,7 +45,13 @@ async def search_lostark(message):
     m = f" 공격력 `{data.state.attack}`\n최대 생명력 `{data.state.hp}`"
     embed.add_field(name="기본 특성", value=m)
 
+    elixir = data.profile_ingame.profile_equipment.elixir
+    if elixir is not None:
+        m = f"`{elixir.name}`"
+        embed.add_field(name="엘릭서", value=m)
+
     options.embeds["기본 정보"] = embed
+
 
     message = await send_message(message.channel, embed=options.embeds["기본 정보"], view=options)
     options.set_message(message)
