@@ -2,7 +2,10 @@ import urllib.parse
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
-from .data import Profile, MariShop
+try:
+    from .data import Profile, MariShop
+except:
+    from lostark.crawling.data import Profile, MariShop
 
 
 def get_html_object(url="https://lostark.game.onstove.com/Profile/Character/허니퓨"):
@@ -36,7 +39,15 @@ def get_mari_shop(base_url="https://lostark.game.onstove.com/Shop"):
 if __name__ == "__main__":
     # bs_object = get_html_object_korean()
 
-    data = get_character_data(character_name="평타맛있게치는사람")
+    data = get_character_data(character_name="거리의아이")
+
+    import json
+
+    # character_name = "거리의아이"
+    # with open(f"{character_name}.json", "w") as t:
+    #     data = get_html_object_korean(character_name=character_name)
+    #
+    #     t.write(data.prettify())
 
     # data = get_mari_shop()
     # data = get_gold_info()

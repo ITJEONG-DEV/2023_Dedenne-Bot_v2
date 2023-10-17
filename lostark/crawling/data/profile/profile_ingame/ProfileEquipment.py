@@ -50,6 +50,84 @@ class ProfileEquipment:
         img = get_bs_object(profile_equipment_character).img
         self.__src = img["src"]
 
+    def __get_is_transcendence(self, item):
+        if "type" not in item:
+            return False
+
+        if "IndentStringGroup" != item["type"]:
+            return False
+
+        if "value" not in item:
+            return False
+
+        if "Element_000" not in item["value"]:
+            return False
+
+        if "topStr" not in item["value"]["Element_000"]:
+            return False
+
+        if "초월" not in item["value"]["Element_000"]["topStr"]:
+            return False
+
+        return True
+
+    def __get_is_elixir(self, item):
+        if "type" not in item:
+            return False
+
+        if "IndentStringGroup" != item["type"]:
+            return False
+
+        if "value" not in item:
+            return False
+
+        if "Element_000" not in item["value"]:
+            return False
+
+        if "topStr" not in item["value"]["Element_000"]:
+            return False
+
+        if "엘릭서" not in item["value"]["Element_000"]["topStr"]:
+            return False
+
+        return True
+
+    def __get_is_setname(self, item):
+        if "type" not in item:
+            return False
+
+        if "SetItemGroup" != item["type"]:
+            return False
+
+        if "value" not in item:
+            return False
+
+        if "firstMsg" not in item["value"]:
+            return False
+
+        return True
+
+    def __get_is_set(self, item):
+        if "type" not in item:
+            return False
+
+        if "IndentStringGroup" != item["type"]:
+            return False
+
+        if "value" not in item:
+            return False
+
+        if "Element_000" not in item["value"]:
+            return False
+
+        if "topStr" not in item["value"]["Element_000"]:
+            return False
+
+        if "세트" not in item["value"]["Element_000"]["topStr"]:
+            return False
+
+        return True
+
     def __parse_profile_equipment_slot__(self, bs_object: BeautifulSoup, script: json):
         if script is None:
             return
@@ -81,28 +159,59 @@ class ProfileEquipment:
                 self.__equipment_slot.append(slot)
 
                 data = script["Equip"][item_data]
+                set_name = None
 
+                for key, item in data.items():
+                    if int(key.split("_")[1]) < 8:
+                        continue
 
-                # set name
-                top_str = data["Element_009"]["value"]["Element_000"]["topStr"]
-                set_name = get_bs_object(top_str).find("font").text
+                    if self.__get_is_transcendence(item):
+                        print('transcendence')
+                        # 초월
+                        pass
+                    elif self.__get_is_elixir(item):
+                        print('elixir')
+                        # 엘릭서
+                        pass
+                    elif self.__get_is_setname(item):
+                        print('set name', item)
+                        # 세트명
+                        set_name = get_bs_object(item["value"]["firstMsg"]).text
 
-                # set effect
-                set_effect_obj = data["Element_009"]["value"]
+                        for setItem in item["value"]["itemData"].values():
+                            lv = get_bs_object(setItem["label"][1:]).text[1:-1]
+                    elif self.__get_is_set(item):
+                        # set effect
+                        for setEffectItem in item["value"].values():
+                            main_target = get_bs_object(setEffectItem["topStr"])
 
-                for item in set_effect_obj.items():
-                    content = item[1]["topStr"]
-                    name = " ".join(get_bs_object(content).find("font").text.split("[")[0].split(" ")[:-1])
-                    lv = get_bs_object(content).find("font", {"color": "#FFD200"})
-                    if lv is not None:
-                        lv = lv.text
-                        effect = get_bs_object(item[1]["contentStr"]["Element_000"]["contentStr"]).find("font").text
+                            effect = main_target.text.split('[')[0]
+                            lv = main_target.find("font", {"color": "#FFD200"})
 
-                        self.__equipment_set_effect.add(f"{set_name}\t{name}\t{lv}\t{effect}")
+                            if lv is not None:
+                                lv = lv.text
+
+                            self.__equipment_set_effect.add(f"{set_name}\t{effect}\t{lv}\tNone")
+
+                # # set name
+                # top_str = data["Element_009"]["value"]["Element_000"]["topStr"]
+                # set_name = get_bs_object(top_str).find("font").text
+                #
+                # # set effect
+                # set_effect_obj = data["Element_009"]["value"]
+                #
+                # for item in set_effect_obj.items():
+                #     content = item[1]["topStr"]
+                #     name = " ".join(get_bs_object(content).find("font").text.split("[")[0].split(" ")[:-1])
+                #     lv = get_bs_object(content).find("font", {"color": "#FFD200"})
+                #     if lv is not None:
+                #         lv = lv.text
+                #         effect = get_bs_object(item[1]["contentStr"]["Element_000"]["contentStr"]).find("font").text
+                #
+                #         self.__equipment_set_effect.add(f"{set_name}\t{name}\t{lv}\t{effect}")
 
             except Exception:
                 continue
-
 
     def __parse_profile_avatar_slot__(self, bs_object: BeautifulSoup):
         profile_avatar_slot = bs_object.find("div", {"class": "profile-avatar__slot"})
