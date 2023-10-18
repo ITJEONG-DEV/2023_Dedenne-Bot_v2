@@ -19,12 +19,14 @@ def get_events(auth):
 
     return response.json()
 
+
 def get_notices(type, auth):
     request_url = main_url + f"/news/notices/"
 
     response = requests.get(request_url, headers=get_GET_headers(auth), verify=False)
 
     return response.json()
+
 
 def get_dobyss_info(auth):
     request_url = main_url + "/gamecontents/challenge-abyss-dungeons"
@@ -76,10 +78,12 @@ def get_gems(name, auth):
 
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
-    try:
-        return response.json()
-    except:
+    data = response.json()
+
+    if "Error" in data.keys():
         return {"Items": None}
+    else:
+        return data
 
 
 def get_leaf_stone(auth):
@@ -100,10 +104,12 @@ def get_leaf_stone(auth):
 
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
-    try:
-        return response.json()
-    except:
+    data = response.json()
+
+    if "Error" in data.keys():
         return {"Items": None}
+    else:
+        return data
 
 
 def get_engrave(name, auth):
@@ -124,10 +130,12 @@ def get_engrave(name, auth):
 
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
-    try:
-        return response.json()
-    except:
+    data = response.json()
+
+    if "Error" in data.keys():
         return {"Items": None}
+    else:
+        return data
 
 
 def get_engrave_rank(auth):
@@ -148,10 +156,12 @@ def get_engrave_rank(auth):
 
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
-    try:
-        return response.json()
-    except:
+    data = response.json()
+
+    if "Error" in data.keys():
         return {"Items": None}
+    else:
+        return data
 
 
 def get_avatar(name, character_class, auth):
@@ -172,10 +182,12 @@ def get_avatar(name, character_class, auth):
 
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
-    try:
-        return response.json()
-    except:
+    data = response.json()
+
+    if "Error" in data.keys():
         return {"Items": None}
+    else:
+        return data
 
 
 def get_item(category, character_class, tier, grade, name, auth):
@@ -196,10 +208,12 @@ def get_item(category, character_class, tier, grade, name, auth):
 
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
-    try:
-        return response.json()
-    except:
+    data = response.json()
+
+    if "Error" in data.keys():
         return {"Items": None}
+    else:
+        return data
 
 
 def get_island_info(auth):
@@ -209,8 +223,13 @@ def get_island_info(auth):
 
     island = []
 
-    for item in response.json():
-        if item["CategoryName"] == "모험 섬":
+    data = response.json()
+
+    if "Error" in data.keys():
+        return None
+
+    for item in data:
+        if "모험" in item["CategoryName"]:
             island.append(item)
 
     return island

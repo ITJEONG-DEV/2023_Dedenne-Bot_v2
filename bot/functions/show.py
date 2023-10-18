@@ -8,6 +8,10 @@ from ..views import NoticeView
 async def show_dobyss(message, auth, icon_url):
     response = get_dobyss_info(auth)
 
+    if "Error" in response.keys():
+        await send_message(message.channel, message="현재 도전 어비스 던전 컨텐츠의 정보를 조회할 수 없어요.")
+        return
+
     embeds = []
     for item in response:
         embed = discord.Embed(
@@ -25,11 +29,15 @@ async def show_dobyss(message, auth, icon_url):
     if len(embeds) > 0:
         await send_message(message.channel, embeds=embeds)
     else:
-        await send_message(message.channel, message="정보를 조회할 수 없습니다.")
+        await send_message(message.channel, message="현재 도전 어비스 던전 컨텐츠의 정보를 조회할 수 없어요.")
 
 
 async def show_doguard(message, auth, icon_url):
     response = get_doguard_info(auth)
+
+    if "Error" in response.keys():
+        await send_message(message.channel, message="현재 도전 가디언 토벌 컨텐츠의 정보를 조회할 수 없어요.")
+        return
 
     embeds = []
     for item in response["Raids"]:
@@ -48,14 +56,14 @@ async def show_doguard(message, auth, icon_url):
     if len(embeds) > 0:
         await send_message(message.channel, embeds=embeds)
     else:
-        await send_message(message.channel, message="정보를 조회할 수 없습니다.")
+        await send_message(message.channel, message="현재 도전 가디언 토벌 컨텐츠의 정보를 조회할 수 없어요.")
 
 
 async def show_events(message, auth, icon_url):
     data = get_events(auth)
 
-    if data is None:
-        await send_message(channel=message.channel, message="이벤트 정보를 조회할 수 없어요.")
+    if data is None or "Error" in data.keys():
+        await send_message(channel=message.channel, message="현재 이벤트 정보를 조회할 수 없어요.")
 
     else:
         embeds = []
@@ -86,8 +94,8 @@ async def show_notices(message, auth, icon_url):
     max_count = 5
     data = get_notices('', auth)
 
-    if data is None:
-        await send_message(channel=message.channel, message="공지 정보를 조회할 수 없어요.")
+    if data is None or "Error" in data.keys():
+        await send_message(channel=message.channel, message="현재 공지 정보를 조회할 수 없어요.")
 
     else:
         options = NoticeView(data, max_count)
@@ -114,7 +122,7 @@ async def show_notices(message, auth, icon_url):
 async def show_adventure_island(message, auth, icon_url):
     link = get_adventure_island(auth)
 
-    if link == "":
+    if link is None or link == "":
         embed = discord.Embed(
             title="모험섬",
             url="https://lostark.game.onstove.com/Library/Tip/Views/138208?page=1&libraryStatusType=0&librarySearchCategory=0&searchtype=0&searchtext=&ordertype=latest&LibraryQaAnswerType=None&UserPageType=0",

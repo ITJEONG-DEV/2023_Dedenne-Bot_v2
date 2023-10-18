@@ -41,6 +41,9 @@ elif "Linux" in platform.platform():
 def filter_data(auth):
     data = get_island_info(auth)
 
+    if data is None:
+        return None
+
     today_island = []
 
     today = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -307,6 +310,9 @@ def get_adventure_island(auth):
 
     if not os.path.isfile(link):
         island_info = filter_data(auth)
+
+        if island_info is None:
+            return None
 
         image = make_daily_adventure_island(island_info, f"{date} 모험섬 일정")
         # link = f'./adventure_island/data/today/{date}.png'

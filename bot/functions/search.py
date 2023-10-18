@@ -135,7 +135,7 @@ async def search_gem(message, auth, icon_url):
         await send_message(message.channel, embed=embed)
 
     else:
-        await send_message(message.channel, message=f"{' '.join(words[1:])}에 해당하는 매물이 없어요")
+        await send_message(message.channel, message=f"{' '.join(words[1:])}에 해당하는 매물을 찾을 수 없어요")
 
 
 async def search_leaf_stone(message, auth, icon_url):
@@ -230,8 +230,11 @@ async def search_engrave(message, auth, icon_url):
     else:
         data = get_engrave(keyword, auth)["Items"]
 
-    if len(data) == 0:
-        return await send_message(message.channel, f"{keyword} 각인서를 찾을 수 없습니다")
+    if data is None or len(data) == 0:
+        if keyword == "순위":
+            return await send_message(message.channel, f"각인서 가격 순위를 조회할 수 없어요")
+        else:
+            return await send_message(message.channel, f"{keyword} 각인서의 가격을 찾을 수 없어요")
 
     embeds = []
 
@@ -328,7 +331,7 @@ async def search_market(message, auth, icon_url):
         keyword = ""
 
     options = MarketSearchView(data=None)
-    message = await send_message(message.channel, message="검색 옵션을 설정합니다.", view=options)
+    message = await send_message(message.channel, message="검색 옵션을 설정해주세요.", view=options)
     options.set_message(message)
     options.keyword = keyword
     options.auth = auth
