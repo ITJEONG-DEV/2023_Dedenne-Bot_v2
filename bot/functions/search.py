@@ -7,12 +7,26 @@ from .send import send_message
 from ..views import CharacterView, MariShopView, MarketSearchView, MarketView
 
 
-async def search_lostark(message):
+async def search_lostark(message, auth):
     keyword = message.content.split()[-1]
     data = get_character_data(character_name=keyword)
 
     if data is None:
         return await send_message(channel=message.channel, message=f"{keyword}의 정보를 조회할 수 없어요.")
+
+    siblings = get_siblings(keyword, auth)
+
+    for server in data.profile_character_list.character_list:
+        server_name = server.server
+
+        for character in server.characters:
+            character_name = character.name
+
+            for item in siblings:
+                if item["ServerName"] == server_name and item["CharacterName"] == character_name:
+                    character.add_item_lv(item["ItemMaxLevel"])
+                    siblings.remove(item)
+                    break
 
     options = CharacterView(data=data)
 
@@ -51,7 +65,6 @@ async def search_lostark(message):
         embed.add_field(name="엘릭서", value=m)
 
     options.embeds["기본 정보"] = embed
-
 
     message = await send_message(message.channel, embed=options.embeds["기본 정보"], view=options)
     options.set_message(message)

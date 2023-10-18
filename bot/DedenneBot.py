@@ -83,7 +83,9 @@ class DedenneBot(discord.Client):
             elif command == "search":
                 self.write_statistics(command)
                 await message.add_reaction('✔')
-                await search_lostark(message)
+
+                apikeyauth = self.lostark["apikeyauth"] if message.guild.id % 2 == 1 else self.lostark["apikeyauth2"]
+                await search_lostark(message, apikeyauth)
 
             elif command == "item":
                 self.write_statistics(command)

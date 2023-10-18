@@ -43,6 +43,12 @@ def get_doguard_info(auth):
 
     return response.json()
 
+def get_siblings(name, auth):
+    request_url = main_url + f"/characters/{name}/siblings"
+
+    response = requests.get(request_url, headers=get_GET_headers(auth), verify=False)
+
+    return response.json()
 
 def get_gems(name, auth):
     data_dict = {}

@@ -162,7 +162,7 @@ class CharacterView(DefaultView):
             for server in character_list:
                 msg += "**" + server.server + "**\n```"
                 for character in server.characters:
-                    msg += character.name + " " + character.lv + " " + character.job + "\n"
+                    msg += character.name + " " + character.item_lv + " " + character.job + "\n"
                 msg += "```\n"
 
             embed.add_field(name="보유 캐릭터 목록", value=msg)
