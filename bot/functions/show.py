@@ -12,7 +12,7 @@ async def show_dobyss(message, auth, icon_url):
         await send_message(message.channel, message="현재 도전 어비스 던전 컨텐츠의 정보를 조회할 수 없어요.")
         return
 
-    if "Error" in response.keys():
+    if isinstance(response, dict):
         await send_message(message.channel, message="현재 도전 어비스 던전 컨텐츠의 정보를 조회할 수 없어요.")
         return
 
@@ -70,7 +70,7 @@ async def show_doguard(message, auth, icon_url):
 async def show_events(message, auth, icon_url):
     data = get_events(auth)
 
-    if data is None or "Error" in data.keys():
+    if isinstance(data, dict):
         await send_message(channel=message.channel, message="현재 이벤트 정보를 조회할 수 없어요.")
 
     else:
@@ -102,7 +102,7 @@ async def show_notices(message, auth, icon_url):
     max_count = 5
     data = get_notices('', auth)
 
-    if data is None or "Error" in data.keys():
+    if isinstance(data, dict):
         await send_message(channel=message.channel, message="현재 공지 정보를 조회할 수 없어요.")
 
     else:
