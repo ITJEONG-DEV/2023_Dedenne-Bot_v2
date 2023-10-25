@@ -17,7 +17,11 @@ def get_events(auth):
 
     response = requests.get(request_url, headers=get_GET_headers(auth), verify=False)
 
-    return response.json()
+    try:
+        data = response.json()
+        return data
+    except:
+        return None
 
 
 def get_notices(type, auth):
@@ -25,7 +29,11 @@ def get_notices(type, auth):
 
     response = requests.get(request_url, headers=get_GET_headers(auth), verify=False)
 
-    return response.json()
+    try:
+        data = response.json()
+        return data
+    except:
+        return None
 
 
 def get_dobyss_info(auth):
@@ -33,7 +41,11 @@ def get_dobyss_info(auth):
 
     response = requests.get(request_url, headers=get_GET_headers(auth), verify=False)
 
-    return response.json()
+    try:
+        data = response.json()
+        return data
+    except:
+        return None
 
 
 def get_doguard_info(auth):
@@ -41,14 +53,24 @@ def get_doguard_info(auth):
 
     response = requests.get(request_url, headers=get_GET_headers(auth), verify=False)
 
-    return response.json()
+    try:
+        data = response.json()
+        return data
+    except:
+        return None
+
 
 def get_siblings(name, auth):
     request_url = main_url + f"/characters/{name}/siblings"
 
     response = requests.get(request_url, headers=get_GET_headers(auth), verify=False)
 
-    return response.json()
+    try:
+        data = response.json()
+        return data
+    except:
+        return None
+
 
 def get_gems(name, auth):
     data_dict = {}
@@ -84,12 +106,15 @@ def get_gems(name, auth):
 
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
-    data = response.json()
+    try:
+        data = response.json()
 
-    if "Error" in data.keys():
+        if "Error" in data.keys():
+            return {"Items": None}
+        else:
+            return data
+    except:
         return {"Items": None}
-    else:
-        return data
 
 
 def get_leaf_stone(auth):
@@ -110,12 +135,15 @@ def get_leaf_stone(auth):
 
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
-    data = response.json()
+    try:
+        data = response.json()
 
-    if "Error" in data.keys():
+        if "Error" in data.keys():
+            return {"Items": None}
+        else:
+            return data
+    except:
         return {"Items": None}
-    else:
-        return data
 
 
 def get_engrave(name, auth):
@@ -136,12 +164,15 @@ def get_engrave(name, auth):
 
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
-    data = response.json()
+    try:
+        data = response.json()
 
-    if "Error" in data.keys():
+        if "Error" in data.keys():
+            return {"Items": None}
+        else:
+            return data
+    except:
         return {"Items": None}
-    else:
-        return data
 
 
 def get_engrave_rank(auth):
@@ -162,12 +193,15 @@ def get_engrave_rank(auth):
 
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
-    data = response.json()
+    try:
+        data = response.json()
 
-    if "Error" in data.keys():
+        if "Error" in data.keys():
+            return {"Items": None}
+        else:
+            return data
+    except:
         return {"Items": None}
-    else:
-        return data
 
 
 def get_avatar(name, character_class, auth):
@@ -188,12 +222,16 @@ def get_avatar(name, character_class, auth):
 
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
 
-    data = response.json()
+    try:
+        data = response.json()
 
-    if "Error" in data.keys():
+        if "Error" in data.keys():
+            return {"Items": None}
+        else:
+            return data
+
+    except:
         return {"Items": None}
-    else:
-        return data
 
 
 def get_item(category, character_class, tier, grade, name, auth):
@@ -213,13 +251,15 @@ def get_item(category, character_class, tier, grade, name, auth):
     request_url = main_url + "/markets/items"
 
     response = requests.post(request_url, headers=get_POST_headers(auth), data=data, verify=False)
+    try:
+        data = response.json()
 
-    data = response.json()
-
-    if "Error" in data.keys():
+        if "Error" in data.keys():
+            return {"Items": None}
+        else:
+            return data
+    except:
         return {"Items": None}
-    else:
-        return data
 
 
 def get_island_info(auth):
@@ -229,13 +269,23 @@ def get_island_info(auth):
 
     island = []
 
-    data = response.json()
+    try:
+        data = response.json()
 
-    if "Error" in data.keys():
+        if "Error" in data.keys():
+            return None
+
+        for item in data:
+            if "모험" in item["CategoryName"]:
+                island.append(item)
+    except:
         return None
 
-    for item in data:
-        if "모험" in item["CategoryName"]:
-            island.append(item)
-
     return island
+
+
+if __name__ == "__main__":
+    result = get_item("", "", None, None, "",
+                      "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyIsImtpZCI6IktYMk40TkRDSTJ5NTA5NWpjTWk5TllqY2lyZyJ9.eyJpc3MiOiJodHRwczovL2x1ZHkuZ2FtZS5vbnN0b3ZlLmNvbSIsImF1ZCI6Imh0dHBzOi8vbHVkeS5nYW1lLm9uc3RvdmUuY29tL3Jlc291cmNlcyIsImNsaWVudF9pZCI6IjEwMDAwMDAwMDAwMDA1MTMifQ.KJSweBbQpwz7OcYwY_Fc9FJDmSBL_8y0KqNXKq3KMC6vIgy-Cmsfzi7klAyjIJLGRB2SeW9sq--QbafkIHBeWUVD7jROy8mhLvKlr8vLnGJ5IePGriBtC6IB-Ma6Wr1w4Upa0jwBDE7eRwk6FPX21wrXnalqk-MpYpTBmPp1MmcaNVCoxZliMRsNtfrFrQE0RnceerNsBAoj6blyIt7wH9IB5dHTzLYEDVXBA6rQeS8gBzYzcKC4yWDcHSas6es_JqCykp-w9HdaT20YXZW0te3knRl2VZ3oOsVmCmCoPk3cSHaqaleesmabKnuWPd7sT6FCvdKeuhfCNvMNAze9nA")
+
+    print(result)

@@ -16,6 +16,9 @@ async def search_lostark(message, auth):
 
     siblings = get_siblings(keyword, auth)
 
+    if siblings is None:
+        return await send_message(channel=message.channel, message=f"{keyword}의 정보를 조회할 수 없어요.")
+
     for server in data.profile_character_list.character_list:
         server_name = server.server
 

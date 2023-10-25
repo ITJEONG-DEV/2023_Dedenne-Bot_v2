@@ -8,6 +8,10 @@ from ..views import NoticeView
 async def show_dobyss(message, auth, icon_url):
     response = get_dobyss_info(auth)
 
+    if response is None:
+        await send_message(message.channel, message="현재 도전 어비스 던전 컨텐츠의 정보를 조회할 수 없어요.")
+        return
+
     if "Error" in response.keys():
         await send_message(message.channel, message="현재 도전 어비스 던전 컨텐츠의 정보를 조회할 수 없어요.")
         return
@@ -34,6 +38,10 @@ async def show_dobyss(message, auth, icon_url):
 
 async def show_doguard(message, auth, icon_url):
     response = get_doguard_info(auth)
+
+    if response is None:
+        await send_message(message.channel, message="현재 도전 가디언 토벌 컨텐츠의 정보를 조회할 수 없어요.")
+        return
 
     if "Error" in response.keys():
         await send_message(message.channel, message="현재 도전 가디언 토벌 컨텐츠의 정보를 조회할 수 없어요.")
